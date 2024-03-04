@@ -1,0 +1,7 @@
+[theme]
+base="light"
+primaryColor="purple"
+#primaryColor="#4b71ff"
+
+[browser]
+gatherUsageStats = false

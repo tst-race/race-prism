@@ -1,0 +1,115 @@
+#  Copyright (c) 2019-2023 SRI International.
+#  All rights reserved.
+# Settings that both client and server use
+
+debug = false
+debug_extra = false
+production = true
+
+# The base name of client registration committee members
+ibe_committee_name = "prism_client_registration"
+# The number of members of the client registration committee
+ibe_shards = 1
+
+# The directory to record logs. If blank, write to stdout.
+log_dir = ""
+
+# supporting distributed tracing with Jaeger:
+jaeger_agent_host = "localhost"
+jaeger_agent_port = 6831
+
+# A salt that is prepended to usernames before hashing them into pseudonyms.
+# If the placeholder {date} is present, it will be substituted with the current
+# date in UTC time.
+pseudonym_salt = "PRISM{date}"
+
+# The modulus used for secret sharing
+mpc_modulus = 210340362182463027693671312934069294429519269866912637212799832923523392566897
+
+# How often to poll dropboxes
+poll_timing_ms = 600000
+# The total number of dropbox committees
+dropbox_count = 1
+# How many dropboxes each client should poll
+dropboxes_per_client = 1
+# How many dropboxes each client should send to when sending a message
+dropbox_send_redundancy = 1
+
+# Whether to create new links at runtime
+dynamic_links = true
+# Whether servers are engaging in the link-state routing protocol
+ls_routing = false
+
+# The number of seconds the dynamic transport will hold on to a package that hasn't been claimed by a hook
+dt_hold_package_sec = 60
+
+
+# seconds to use or add for how long to keep a seen (received) message in memory before forgetting about it:
+# set to 0 if keeping messages forever (= memory leak!)
+msg_seen_ttl = 1800
+# how often to check for expired messages [in seconds]
+msg_seen_sleep = 60.0
+
+# The maximum message size that transports should allow, in bytes
+max_message_size = 100_000_000
+# The maximum cleartext message size that clients should accept, in bytes
+max_plaintext_size = 50_000_000
+
+# The number of seconds between monitor log updates
+log_monitor_interval = 15.0
+log_monitor_trace_interval = 60.0
+log_rotate_bytes = 0
+
+# The number of bytes to include as a checksum with links that do checksumming
+checksum_bytes = 16
+
+# Whether to enable OpenTracing
+tracing = false
+
+# The interval (in seconds) to poll for config file changes. If negative, do not poll.
+watchdog_sleep = 5.0
+
+# Transport timeouts
+transport_send_timeout = 720
+transport_open_connection_timeout = 720
+# ignore any message with a timestamp before the program started
+transport_ignore_old = true
+# The number of seconds before startup to tolerate messages
+transport_ignore_tolerance = 5
+# If true, the transport layer will automatically remove links that haven't
+# been used recently and have no active epoch references.
+transport_reaper = true
+# The delay (in seconds) before the transport cleans up an unused link
+transport_reaper_delay_sec = 30.0
+
+# Set to true if the Prism instance is client-like (either client or Registration committee)
+is_client = false
+
+# Number of channels to open incoming links of each type on
+incoming_channel_count = 1
+
+# Clients prefer to send messages through their "connected" emixes
+client_prefer_connected = false
+# Clients assume an emix they haven't heard from in this long is dead
+client_emix_disconnect_timeout_sec = 300
+
+# clients will retain messages in their send log for this many seconds after finishing sending,
+# in case any of the send routes become invalidated
+client_retain_message_sec = 1200.0
+
+# clients will believe a server is alive if the most recent report of life is
+# this many seconds newer than the most recent report of death
+client_believe_alive_interval_sec = 60.0
+
+# Set to false to turn off all control plane messages (e.g. LSP/ARK)
+control_traffic = true
+
+# If true, nodes will only use channels that are tagged for the purpose they are creating a link for
+# If false, nodes will use the "best available" channel as a backup if no tagged channels are available
+strict_channel_tags = true
+
+# if false, disable saving state to the state store
+save_state = true
+# do not load state from the state store at startup
+ignore_state = false
+

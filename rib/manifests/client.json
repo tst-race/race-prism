@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    {
+      "file_path": "prism",
+      "plugin_type": "network-manager",
+      "file_type": "python",
+      "node_type": "client",
+      "config_path": "prism",
+      "python_module": "prism.rib.client",
+      "python_class": "SRINMClient"
+    }
+  ]
+}

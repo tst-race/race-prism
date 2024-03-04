@@ -1,0 +1,32 @@
+#  Copyright (c) 2019-2023 SRI International.
+#  All rights reserved.
+# Boneh-Franklin IBE Configuration
+private_key = ""
+
+# Expose a REST API
+client_rest_api = false
+client_rest_port = 8080
+
+# The minimum number of EMIXes to route messages through
+onion_layers = 1
+
+# Whether the client should poll dropboxes for messages
+polling = true
+
+# Client poll requests authorize the server to continue polling until an expiration date,
+# which is poll_timing_ms in the future when the poll request is sent.
+dropbox_poll_with_duration = true
+
+# Send messages on all possible links
+prefer_broadcast = false
+
+# The maximum number of channels to create return links on
+max_return_channels = 2
+
+# How often, in seconds, to retry sending bootstrap IBE requests to the registration committee
+bootstrap_request_interval_sec = 600.0
+
+# The number of EMIXes to maintain links to
+client_emix_count = 1
+# How often, in seconds, to attempt a new EMIX connection if below the threshold
+link_maintenance_interval_sec = 60.0

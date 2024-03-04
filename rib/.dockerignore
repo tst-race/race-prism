@@ -1,0 +1,7 @@
+dockerfiles
+.git
+**/venv
+**/__pycache__
+rangeconfig
+range_defs
+localconfig

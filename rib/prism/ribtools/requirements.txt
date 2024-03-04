@@ -1,0 +1,2 @@
+trio==0.19.*
+requests

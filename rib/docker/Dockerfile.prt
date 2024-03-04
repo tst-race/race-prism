@@ -1,0 +1,11 @@
+ARG RACE_CONTAINER_REGISTRY="ghcr.io/tst-race/race-images"
+ARG RACE_VERSION
+
+FROM ${RACE_CONTAINER_REGISTRY}/race-compile:${RACE_VERSION} AS build
+
+# Compile BFIBE
+COPY ./bfibe /code/bfibe
+RUN rm -rf /code/bfibe/build; mkdir -p /code/bfibe/build
+WORKDIR /code/bfibe/build
+RUN apt-get update -y && apt-get install libgmp3-dev -y --no-install-recommends
+RUN cmake -DCMAKE_PREFIX_PATH=/linux/x86_64 .. && make

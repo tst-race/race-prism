@@ -1,0 +1,173 @@
+#  Copyright (c) 2019-2023 SRI International.
+#  All rights reserved.
+
+# statically configured role of server for genesis epoch
+roles = []
+# dropbox index (only used in roles DROPBOX*), meaningful values are >= 0:
+db_index = -1
+
+# MPC-related environment variables:
+party_ids = []
+
+# for the TCP PrismTransport channel, what port to use
+prism_socket_port = 7871
+
+# at startup, sleep for delay_fixed + delay*rand() seconds
+delay = 1
+delay_fixed = 2
+
+# PKI stuff:  TODO: implement in PRISM config generator functions to generate these in Docker images
+# TODO: if testing manually (outside Docker) then follow README-PKI.md instructions
+# ===
+# load Root CA certificate from this file:
+pki_root_cert_file = ""
+# if set, then load Root CA private key from this file and self-issue/-sign all server certificates (for scale up testing)
+pki_root_private_key_file = ""
+# if root private key above not set, then use the directory from `pki_root_cert_file` to look for structure like this:
+#   epoch_000/  # genesis
+#             *-server-00001_key.pem, *-server-00001_cert.pem,
+#             *-server-00002_key.pem, *-server-00002_cert.pem,
+#             [...]  # for all servers
+#   epoch_001/  # first switched-to epoch
+#             *-server-00001_key.pem, *-server-00001_cert.pem, [...]
+#   [...]  # for certain number of epochs
+
+# the interval at which a server shoudl refresh its own ARK with new expiration, in minutes
+cs2_ark_timeout = 1
+# ARK expiration factor: use this to set the expiration time as a multiple of the ARK timeout
+# values < 1 are set to 1
+cs2_ark_expiration_factor = 2
+# the amount of time an EMIX waits between each send when broadcasting ARKs
+cs2_ark_sleep_time = 10
+# The largest package of ARKs (in bytes) we're willing to send at once
+cs2_arks_max_mtu = 100000
+
+# EMIXes should update clients as they discover servers have become unreachable
+nark = true
+# Wait to check on reachability before sending NARK about no longer reachable servers
+nark_confirmation_seconds = 10
+# Sleep this long before checking reachability and confirmation again to determine any NARK messages
+nark_timeout_seconds = 10
+# If set to True, will allow at time of updating the routing table to short-circuit the waiting times above:
+nark_allow_cancel = false
+
+# link-state routing variables
+# initial time (in seconds) to wait for neighborhood to stabilize before sending first LSP flood
+ls_initial_delay_sec = 30.0
+# default value for Link-State Protocol message TTL field in seconds, 60 min = 1800s
+ls_time_to_live = 3600
+# TTL maximum is given as seconds: 1h = 60m = 3600s
+ls_ttl_max = 3600
+# refresh own LSP at a fraction of TTL
+ls_own_refresh = 0.66
+# this value should be around the diameter of the network:
+ls_hops_max = 8
+# the interval at which the neighborhood sends connect requests to out-of-touch neighbors
+ls_neighbor_connect_interval_sec = 60
+# the maximum amount of time to let a link to a neighbor sit idle
+ls_hello_timeout_ms = 10000
+# assume that a neighbor we haven't heard from in this multiple of ls_hello_timeout_ms is disconnected
+ls_alive_factor = 2.0
+# assume a neighbor that we haven't managed to reconnect to after this multiple of the alive timeout is fully dead
+ls_dead_factor = 2.0
+# the first ls_early_refresh_count intervals in an epoch will have an alternate, faster interval of
+# ls_early_refresh_factor*ls_time_to_live seconds
+ls_early_refresh_count = 0
+ls_early_refresh_factor = 1
+# sleep this long between each message in a flood
+ls_flood_sleep = 0.15
+# the maximum number of concurrent floods to process
+ls_flood_concurrency = 4
+# the amount of time for a flood to wait for offline neighbors to come online
+ls_flood_timeout_sec = 20.0
+# the frequency at which neighbor or ARK-related LSP updates are allowed to happen
+ls_update_debounce_sec = 30.0
+# the frequency at which the router saves its internal state
+ls_router_save_interval_sec = 10.0
+# the frequency at which a node can request a LS DB dump from each neighbor with a bigger LSP DB
+ls_request_neighbor_db_interval_sec = 60.0
+
+# The time to wait for between retries of dropbox retries
+db_reply_retry_seconds = 60.0
+# The base of the exponential factor for backoff on dropbox replies
+db_reply_backoff_factor = 1.5
+# The maximum number of retries before giving up
+db_reply_max_retries = 1000
+
+# The nodes which a dropbox retrieving a message can delegate the reply to
+# "self" - only send messages directly from the dropbox
+# "peers" - only send messages through self and members of the committee
+# "neighbors" - only send messages through direct neighbors
+# "any" - any reachable server is considered fair game
+db_reply_delegate = "peers"
+
+# Lock-free MPC parameters
+# The number of parties to generate secret sharing systems for
+mpc_nparties = 4
+# The number of parties needed to recover a secret
+threshold = 2
+# This is for prime modulus for finite field calculations. Should be greater than NBYTES_MESSAGE_CHUNK(in bits) = 32.
+# But keeping it low will help reduce the bandwidth per server
+mpc_nbits_modulus = 257
+# Encrypt MPC peer traffic once half-keys are exchanged
+mpc_lf_encrypt_peer = true
+# The number of find operations to generate preproducts for
+mpc_preproduct_batch_size = 200
+# When less than this fraction of preproducts remain for a given peer group, trigger batch generation
+mpc_preproduct_refresh_threshold = 0.25
+# Only send enough fragments back to the client for minimal reconstruction
+mpc_lf_minimal_replies = true
+# The maximum number of fragments to check in a single find operation
+mpc_lf_find_limit = 10
+# The number of seconds per batch item to wait for preproduct generation
+mpc_lf_batch_timeout = 0.1
+# The number of seconds to wait for a store op to complete before retrying
+mpc_lf_store_timeout = 30.0
+# The number of seconds per fragment to wait for a retrieve op
+mpc_lf_find_timeout = 1.0
+# The number of concurrent store/find operations to allow
+mpc_lf_concurrent_store_limit = 10
+mpc_lf_concurrent_find_limit = 5
+# The time to wait for MPC_HELLO acks, and the time to wait between hello attempts
+mpc_lf_hello_timeout = 10.0
+# The base timeout for check ops
+mpc_lf_check_timeout = 10.0
+mpc_lf_retrieve_timeout = 20.0
+# The base timeout for waiting during ops
+mpc_lf_base_op_timeout = 10.0
+# a multiplier for all MPC timeouts
+mpc_lf_timeout_mult = 1
+
+# mix strategies for EMIX:
+mix_strategy = "POISSON"  #or "POOL", if not set uses "DEFAULT" = idempotent
+mix_poisson_lambda = 0.5  # average delay for Poisson-mixed messages: lambda secs (exponentially with scale=1/lambda)
+mix_pool_size = 10
+mix_pool_flush_ratio = 0.7  # 70% flushed after pool size reached
+mix_pool_timeout = -1
+# Forwarding retries for EMIX:
+mix_forward_retry_delay_sec = 30.0
+mix_forward_retry_limit = 120
+
+# TCP sockets for unicast:
+tcp_socket_reconnect_after = 10.0  # seconds to try and re-connect to a TCP socket
+# TODO: TLS support
+# testing settings to make TCP less performant (simulating Comms channels):
+# socket_test_drop = 0.0  # up to 1.0, which will drop 1005 of messages
+# socket_test_delay = 0.0  # delay will be randomly chosen in [0; delay] interval
+
+# VRF (Cryptographic Sortition) parameters (defaults for very small number of servers ~10):
+vrf_p_off = 0
+vrf_p_emix = 0.3
+vrf_n_ranges = 1
+vrf_m_replicas = 1
+vrf_seed = 0  # if 0 then don't seed PRNG
+# VRF topology:
+vrf_c_p_factor = 3.0  # factor c for random link probabilities: p=c*ln(n)/n or p_i=c*ln(n)/(n*i) for b=0 or >0
+vrf_b_db_emix = 2     # two EMIXes per DB leader; if b=0 then induce ER random graph with uniform p=c*ln(n)/n
+# Online VRF topology settings
+vrf_topology_ring = true   # Whether to connect all EMIXes in a giant ring by pseudonym order
+vrf_link_probability = 0.3 # The probability that non-ring-linked EMIXes will connect to each other
+vrf_outer_link_probability = 1.0 # The proability that outer nodes (Dropbox, Dummy, etc) will be compatible with a given EMIX
+
+# The number of EMIXes outer servers try to link to
+other_server_emix_links = 3

@@ -1,0 +1,28 @@
+# Core
+cbor2==5.4.*
+cffi==1.15.*
+cryptography==3.3.*
+pycryptodome==3.17.*
+dynaconf==3.1.*
+structlog==21.1.*
+trio==0.19.*
+jaeger-client==4.8.0
+opentracing==2.4.0
+typing_inspect==0.7.*
+# PyYAML~=5.4.1
+
+# Server-only (doesn't need to be built for Android)
+networkx==2.6.*
+colorama==0.4.*
+# VRF
+#pyOpenSSL==20.0.*
+
+
+# Tooling
+fastapi==0.75.*
+httpx==0.18.*
+hypercorn[trio]==0.13.*
+requests[socks]==2.26.*
+dnspython==2.1.0
+progressbar2==3.53.*
+setuptools~=56.0.0
